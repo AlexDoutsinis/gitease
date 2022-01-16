@@ -1,0 +1,19 @@
+{
+  "name": "gitpro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": "./bin/gitpro.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Alex Doutsinis",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "commander": "^8.3.0",
+    "inquirer": "^8.2.0",
+    "shelljs": "^0.8.4"
+  }
+}
