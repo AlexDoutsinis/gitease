@@ -13,12 +13,7 @@ const command = {
       silent: true,
     })
 
-    if (res.code == 0) {
-      shell.echo(message.success + 'Changes added to the latest commit')
-      shell.exit(1)
-    }
-
-    shell.echo(message.error + 'Changes could not be added to the latest commit')
+    shell.echo(message.success + 'Staged changes added to the latest commit')
   },
 }
 

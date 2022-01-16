@@ -13,6 +13,7 @@ const { push } = require('../commands/push')
 const { track } = require('../commands/track')
 const { untrack } = require('../commands/untrack')
 const { untrackList } = require('../commands/untrackList')
+const { commit } = require('../commands/commit')
 
 program.version(version)
 
@@ -29,7 +30,6 @@ push(program)
 track(program)
 untrack(program)
 untrackList(program)
+commit(program)
 
 program.parse(process.argv)
-
-// TODO: commit command: pull then commit
