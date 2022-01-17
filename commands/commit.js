@@ -21,13 +21,13 @@ const command = {
 
     await pull(shell, currentBranch)
 
-    const res = shell.exec(`git commit -m "${commitMessage}"`, { silent: true })
-    const noChanges = res.toLowerCase().includes('nothing to commit')
-    const changesAreNotStaged = res.toLowerCase().includes('not staged')
-
     if (changesAreStashed) {
       await stashPop(shell)
     }
+
+    const res = shell.exec(`git commit -m "${commitMessage}"`, { silent: true })
+    const noChanges = res.toLowerCase().includes('nothing to commit')
+    const changesAreNotStaged = res.toLowerCase().includes('not staged')
 
     if (noChanges) {
       shell.echo(message.info + 'There are no changes to commit')
