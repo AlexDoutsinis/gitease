@@ -11,7 +11,9 @@ function getCurrentBranch(shell) {
     return null
   }
 
-  return currentBranch
+  const currentBranchTrimmed = currentBranch.replace(/\n/g, '')
+
+  return currentBranchTrimmed
 }
 
 module.exports = { getCurrentBranch }

@@ -14,3 +14,5 @@ function currentBranchExistOnRemote(shell) {
 }
 
 module.exports = { currentBranchExistOnRemote }
+
+// TODO: create a 'branchExistOnRemote' util

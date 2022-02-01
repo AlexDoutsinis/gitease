@@ -50,3 +50,5 @@ function commit(program) {
 }
 
 module.exports = { commit }
+
+// TODO: create a 'stashUnstagedChanges' util

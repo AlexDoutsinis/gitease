@@ -10,7 +10,7 @@ const { pull } = require('../utils/pull')
 
 const command = {
   name: 'push',
-  description: 'Push local branch changes to remote branch after updating from it',
+  description: 'Push local branch commits to remote branch after updating from it',
   async action() {
     requireGit(shell)
     const currentBranch = getCurrentBranch(shell)
@@ -29,7 +29,14 @@ const command = {
       )
     }
 
-    shell.exec(`git push origin -u ${currentBranch}`)
+    const res = shell.exec(`git push origin -u ${currentBranch}`, { silent: true })
+    const noCommitsToPush = res.includes('up-to-date')
+
+    if (noCommitsToPush) {
+      shell.echo(message.info + 'There are no commits to push')
+    } else {
+      shell.echo(message.success + 'Commits are pushed to remote')
+    }
 
     if (changesAreStashed) {
       await stashPop(shell)
@@ -42,5 +49,3 @@ function push(program) {
 }
 
 module.exports = { push }
-
-//direction 2
