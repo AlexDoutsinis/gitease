@@ -6,25 +6,26 @@ const { message } = require('../utils/message')
 
 const command = {
   name: 'discard',
-  description: 'Undo any modifications made to a file since the last commit',
-  arg: '[file]',
-  action(file) {
+  description: 'Undo any modifications since the last commit',
+  arg: '[files...]',
+  action(files) {
     requireGit(shell)
-    requireArgument(shell, { name: 'file', value: file })
+    requireArgument(shell, { name: 'files', value: files })
 
-    const resetRes = shell.exec(`git reset HEAD ${file}`, { silent: true })
-    if (resetRes.code === 0) {
-      const checkoutRes = shell.exec(`git checkout -- ${file}`, {
-        silent: true,
-      })
+    files.foreach(file => discardFile(file))
 
-      if (checkoutRes == 0) {
-        shell.echo(message.success + `'${file}' discarded`)
-        shell.exit(1)
+    const discardFile = file => {
+      const resetRes = shell.exec(`git reset HEAD ${file}`, { silent: true })
+      if (resetRes.code === 0) {
+        const checkoutRes = shell.exec(`git checkout -- ${file}`, {
+          silent: true,
+        })
+
+        if (checkoutRes == 0) {
+          shell.echo(message.success + `'${file}' discarded`)
+        }
       }
     }
-
-    shell.echo(message.error + 'Discard failed')
   },
 }
 
