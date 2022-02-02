@@ -1,7 +1,7 @@
 const shell = require('shelljs')
 const { requireGit } = require('../utils/requireGit')
 const { prepareCommand } = require('../utils/prepareCommand')
-const { requireArgument } = require('../utils/requireArgument')
+const { requireOption } = require('../utils/requireOption')
 const { message } = require('../utils/message')
 const { stash } = require('../utils/stash')
 const { stashPop } = require('../utils/stashPop')
@@ -16,8 +16,11 @@ const command = {
     { definition: '-a, --add <files...>', description: 'add/stage files' },
     { definition: '-m, --message <message>', description: 'commit message' },
   ],
-  async action({ add: files, message }) {
+  async action({ add: files, message: msg }) {
     requireGit(shell)
+    requireOption(shell, { definition: '-a, --add <files...>', value: files })
+    requireOption(shell, { definition: '-m, --message <message>', value: msg })
+
     const currentBranch = getCurrentBranch(shell)
     const { changesAreStashed } = stash(shell)
 
@@ -27,11 +30,13 @@ const command = {
       await stashPop(shell)
     }
 
+    shell.echo('Staging changes..')
     files.forEach(file => {
       shell.exec(`git add ${file}`)
     })
 
-    const res = shell.exec(`git commit -m "${message}"`, { silent: true })
+    shell.echo('Creating the commit..')
+    const res = shell.exec(`git commit -m "${msg}"`, { silent: true })
     const noChanges = res.toLowerCase().includes('nothing to commit')
     const changesAreNotStaged = res.toLowerCase().includes('not staged')
 
@@ -56,5 +61,3 @@ function commit(program) {
 }
 
 module.exports = { commit }
-
-// TODO: create a 'stashUnstagedChanges' util
