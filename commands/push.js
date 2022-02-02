@@ -33,7 +33,9 @@ const command = {
     if (noCommitsToPush) {
       shell.echo(message.info + 'There are no commits to push')
     } else {
-      shell.echo(message.success + 'Commits are pushed to remote')
+      shell.echo(
+        message.success + `Commits are pushed to remote '${currentBranch}' branch`,
+      )
     }
 
     if (changesAreStashed) {
