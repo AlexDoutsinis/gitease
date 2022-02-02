@@ -19,14 +19,12 @@ const command = {
     if (currentBranchExistOnRemote(shell)) {
       shell.echo(
         message.info +
-          'Remote branch exits. Pull changes from remote before pushing the changes',
+          'Remote branch exits. Check if pull needed before pushing the changes',
       )
 
       await pull(shell, currentBranch)
     } else {
-      shell.echo(
-        message.info + 'Remote branch does not exists. Push current changes to remote',
-      )
+      shell.echo(message.info + 'Remote branch does not exists. Push changes to remote')
     }
 
     const res = shell.exec(`git push origin -u ${currentBranch}`, { silent: true })
