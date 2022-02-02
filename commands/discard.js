@@ -12,8 +12,6 @@ const command = {
     requireGit(shell)
     requireArgument(shell, { name: 'files', value: files })
 
-    files.foreach(file => discardFile(file))
-
     const discardFile = file => {
       const resetRes = shell.exec(`git reset HEAD ${file}`, { silent: true })
       if (resetRes.code === 0) {
@@ -26,6 +24,8 @@ const command = {
         }
       }
     }
+
+    files.forEach(file => discardFile(file))
   },
 }
 
