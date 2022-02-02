@@ -11,11 +11,13 @@ const { pull } = require('../utils/pull')
 const command = {
   name: 'commit',
   description:
-    'Create a commit after updating from remote branch. Pulling before creating a new commit can tremendously reduce future conflicts.',
-  arg: '[commitMessage]',
-  async action(commitMessage) {
+    'Create a commit after staging and updating from remote branch. Pulling before creating a new commit can tremendously reduce future conflicts.',
+  opts: [
+    { definition: '-a, --add <files...>', description: 'add/stage files' },
+    { definition: '-m, --message <message>', description: 'commit message' },
+  ],
+  async action({ add: files, message }) {
     requireGit(shell)
-    requireArgument(shell, { name: 'commitMessage', value: commitMessage })
     const currentBranch = getCurrentBranch(shell)
     const { changesAreStashed } = stash(shell)
 
@@ -25,7 +27,11 @@ const command = {
       await stashPop(shell)
     }
 
-    const res = shell.exec(`git commit -m "${commitMessage}"`, { silent: true })
+    files.forEach(file => {
+      shell.exec(`git add ${file}`)
+    })
+
+    const res = shell.exec(`git commit -m "${message}"`, { silent: true })
     const noChanges = res.toLowerCase().includes('nothing to commit')
     const changesAreNotStaged = res.toLowerCase().includes('not staged')
 
