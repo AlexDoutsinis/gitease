@@ -8,12 +8,12 @@ const command = {
   name: 'untrack',
   description:
     'Untrack file. Not tracking a file means that it will be ignored by git so it can not be pushed to a remote branch.',
-  arg: '[target]',
-  action(target) {
+  arg: '[file]',
+  action(file) {
     requireGit(shell)
-    requireArgument(shell, { name: 'target', value: target })
+    requireArgument(shell, { name: 'file', value: file })
 
-    const res = shell.exec(`git update-index --assume-unchanged ${target}`)
+    const res = shell.exec(`git update-index --assume-unchanged ${file}`)
 
     if (res.code != 0) {
       shell.echo(message.error + `'${file}' can not be untracked`)
@@ -21,7 +21,7 @@ const command = {
     }
 
     shell.echo(
-      message.success + `'${target}' is added in the list with the untracked files`,
+      message.success + `'${file}' is added in the list with the untracked files`,
     )
   },
 }
