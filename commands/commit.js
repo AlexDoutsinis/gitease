@@ -30,12 +30,11 @@ const command = {
       await stashPop(shell)
     }
 
-    shell.echo(message.info + 'Staging changes..')
+    shell.echo(message.info + 'Stage changes')
     files.forEach(file => {
       shell.exec(`git add ${file}`)
     })
 
-    shell.echo(message.info + 'Creating the commit..')
     const res = shell.exec(`git commit -m "${msg}"`, { silent: true })
     const noChanges = res.toLowerCase().includes('nothing to commit')
     const changesAreNotStaged = res.toLowerCase().includes('not staged')
