@@ -11,8 +11,7 @@ const command = {
 
     const part1 = `git log -15 --pretty=format:`
     const part2 = `%Cred%h%Creset`
-    const part3 =
-      JSON.stringify(' -') + JSON.stringify('%C(yellow)%d%Creset').yellow
+    const part3 = JSON.stringify(' -') + JSON.stringify('%C(yellow)%d%Creset').yellow
     const part4 = JSON.stringify(' %s') + JSON.stringify(' %Cgreen(%cr)').green
     const part5 = JSON.stringify(' %C(bold blue)<%an>%Creset').blue.bold
     const part6 = ' --abbrev-commit'
