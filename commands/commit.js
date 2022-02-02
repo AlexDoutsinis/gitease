@@ -11,7 +11,7 @@ const { pull } = require('../utils/pull')
 const command = {
   name: 'commit',
   description:
-    'Create a commit after staging and updating from remote branch. Pulling before creating a new commit can tremendously reduce future conflicts.',
+    'Create a commit after staging current changes and updating from remote branch. Pulling before creating a new commit can tremendously reduce future conflicts.',
   opts: [
     { definition: '-a, --add <files...>', description: 'add/stage files' },
     { definition: '-m, --message <message>', description: 'commit message' },
