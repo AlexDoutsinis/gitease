@@ -1,6 +1,7 @@
 const { showConflicts } = require('./showConflicts')
 const { message } = require('./message')
 const { hasConflicts } = require('./hasConflicts')
+const { sleep } = require('./sleep')
 
 async function resolveConflicts(shell, res) {
   const conflictExist = res.toLowerCase().includes('conflict')
@@ -17,6 +18,8 @@ async function resolveConflicts(shell, res) {
     const conflictsFound = hasConflicts(shell)
     if (conflictsFound) {
       count++
+      await sleep(500)
+
       if (count == showCount) {
         return await findConflicts()
       }
@@ -24,7 +27,7 @@ async function resolveConflicts(shell, res) {
       return await findConflicts(false)
     }
 
-    if (count > 0 || showCount > 0) {
+    if (count > 0) {
       shell.exec('git rebase --continue', { silent: true })
     }
   }
