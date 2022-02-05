@@ -21,6 +21,9 @@ async function showConflicts(shell, pattern) {
 
   const files = hashTable()
 
+  const conflictsText = 'conflicts'.red
+  shell.echo(message.info + `There are some ${conflictsText}. Resolve them:`)
+
   resFiles.forEach((file, index) => {
     const num = `${index + 1}.`.blue.bold
     files.add(index + 1, file)

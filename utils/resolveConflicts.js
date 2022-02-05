@@ -33,9 +33,6 @@ async function resolveConflicts(shell, res) {
   }
 
   if (conflictExist) {
-    shell.echo('')
-    shell.echo(message.info + 'There are some conflicts. Resolve them:')
-
     await findConflicts()
   }
 }
