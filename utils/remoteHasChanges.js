@@ -1,11 +1,9 @@
-const { getCurrentBranch } = require('./getCurrentBranch')
-
 function remoteHasChanges(shell) {
-  const currentBranch = getCurrentBranch(shell)
-  const res = shell.exec(`git fetch origin ${currentBranch}`, { silent: true })
-  const exist = res.includes('remote')
+  shell.exec('git remote update', { silent: true })
+  const res = shell.exec('git status -uno', { silent: true })
+  const remoteHasChanges = res.includes('git pull')
 
-  return exist
+  return remoteHasChanges
 }
 
 module.exports = { remoteHasChanges }
