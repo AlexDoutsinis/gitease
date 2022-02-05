@@ -1,30 +1,20 @@
 const { message } = require('./message')
 const { hashTable } = require('./hashTable')
 const { isNumber } = require('./isNumber')
+const { getConflictedFiles } = require('./getConflictedFiles')
 const inquirer = require('inquirer')
 
 async function showConflicts(shell, pattern) {
-  const resFiles = shell.find(pattern).filter(file => {
-    try {
-      const grepRes = shell.grep('--', '<<<<<<<', file)
-      const grepResTrimmed = grepRes.replace(/\n/g, '')
+  const conflictedFiles = getConflictedFiles(shell, pattern)
 
-      if (grepResTrimmed != '') {
-        return file
-      }
-    } catch (err) {
-      return
-    }
-  })
-
-  if (resFiles.length < 1) return false
+  if (conflictedFiles.length < 1) return false
 
   const files = hashTable()
 
   const conflictsText = 'conflicts'.red
   shell.echo(message.info + `There are some ${conflictsText}. Resolve them:`)
 
-  resFiles.forEach((file, index) => {
+  conflictedFiles.forEach((file, index) => {
     const num = `${index + 1}.`.blue.bold
     files.add(index + 1, file)
 

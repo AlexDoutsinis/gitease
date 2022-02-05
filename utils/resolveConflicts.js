@@ -5,6 +5,7 @@ const { sleep } = require('./sleep')
 
 async function resolveConflicts(shell, res) {
   const conflictExist = res.toLowerCase().includes('conflict')
+  let conflictedFiles = null
 
   let count = 0
   let showCount = 0
@@ -28,11 +29,13 @@ async function resolveConflicts(shell, res) {
     }
 
     if (count > 0) {
+      conflictedFiles.forEach(conflictedFile => shell.exec(`git add ${conflictedFile}`))
       shell.exec('git rebase --continue', { silent: true })
     }
   }
 
   if (conflictExist) {
+    conflictedFiles = getConflictedFiles(shell, pattern)
     await findConflicts()
   }
 }
