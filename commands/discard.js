@@ -34,4 +34,3 @@ function discard(program) {
 }
 
 module.exports = { discard }
-// <<<<<<<
