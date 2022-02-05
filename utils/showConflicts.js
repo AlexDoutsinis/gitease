@@ -33,8 +33,9 @@ async function showConflicts(shell, pattern) {
       },
     ])
 
-    const file = files.search(input.value)
+    shell.echo('')
 
+    const file = files.search(input.value)
     if (file == null) return await question()
 
     shell.exec(`code ${file}`)

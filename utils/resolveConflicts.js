@@ -2,6 +2,7 @@ const { showConflicts } = require('./showConflicts')
 const { message } = require('./message')
 const { hasConflicts } = require('./hasConflicts')
 const { sleep } = require('./sleep')
+const { getConflictedFiles } = require('./getConflictedFiles')
 
 async function resolveConflicts(shell, res) {
   const conflictExist = res.toLowerCase().includes('conflict')
@@ -12,14 +13,14 @@ async function resolveConflicts(shell, res) {
 
   const findConflicts = async (show = true) => {
     if (show) {
-      showCount = showCount + 15
+      showCount = showCount + 20
       await showConflicts(shell, '.')
     }
 
     const conflictsFound = hasConflicts(shell)
     if (conflictsFound) {
       count++
-      await sleep(500)
+      await sleep(1000)
 
       if (count == showCount) {
         return await findConflicts()
@@ -35,7 +36,7 @@ async function resolveConflicts(shell, res) {
   }
 
   if (conflictExist) {
-    conflictedFiles = getConflictedFiles(shell, pattern)
+    conflictedFiles = getConflictedFiles(shell, '.')
     await findConflicts()
   }
 }
