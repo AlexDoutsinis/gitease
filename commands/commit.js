@@ -30,7 +30,7 @@ const command = {
       await stashPop(shell)
     }
 
-    shell.echo(message.info + 'Stage changes')
+    shell.echo(message.info + 'Staging changes..')
     files.forEach(file => {
       shell.exec(`git add ${file}`)
     })
