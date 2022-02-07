@@ -1,6 +1,7 @@
 const shell = require('shelljs')
 const { requireGit } = require('../utils/requireGit')
 const { prepareCommand } = require('../utils/prepareCommand')
+const { requireArgument } = require('../utils/requireArgument')
 const { message } = require('../utils/message')
 
 const command = {
