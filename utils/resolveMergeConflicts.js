@@ -3,6 +3,7 @@ import { hasMergeConflicts } from './hasMergeConflicts.js'
 import { sleep } from './sleep.js'
 import { getConflictedFiles } from './getConflictedFiles.js'
 import { logMessage } from './logMessage.js'
+import { shellExit } from './shellExit.js'
 
 export async function resolveMergeConflicts(shell) {
   let files = null
@@ -35,9 +36,9 @@ export async function resolveMergeConflicts(shell) {
 
     shell.echo(
       logMessage.info +
-        'There are some conflicts but they can not be found in the current directory and sub-directories. Please search for conflicts from the root directory',
+        `There are some conflicts but they can not be found in the current directory and sub-directories. Please search for conflicts from the root directory by using the 'conflicts' command.`,
     )
-    shell.exit(1)
+    shellExit(shell)
   }
 
   files = getConflictedFiles(shell)

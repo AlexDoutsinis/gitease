@@ -2,6 +2,7 @@ import { hashTable } from './hashTable.js'
 import { logMessage } from './logMessage.js'
 import colors from 'colors'
 import inquirer from 'inquirer'
+import { nextLine } from './nextLine.js'
 
 export async function logConflictedFiles(shell, files) {
   if (!files || files.length < 1) return
@@ -26,7 +27,7 @@ export async function logConflictedFiles(shell, files) {
       },
     ])
 
-    shell.echo('')
+    nextLine(shell)
 
     const file = filesHt.search(input.value)
     if (file == null) return await dialog()

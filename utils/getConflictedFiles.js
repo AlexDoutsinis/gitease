@@ -1,5 +1,5 @@
-export function getConflictedFiles(shell) {
-  const files = shell.find('.').filter(file => {
+export function getConflictedFiles(shell, pattern = '.') {
+  const files = shell.find(pattern).filter(file => {
     try {
       const grepRes = shell.grep('--', '<<<<<<< HEAD', file).replace(/\n/g, '')
 

@@ -9,6 +9,7 @@ import { stageFiles } from '../utils/stageFiles.js'
 import { createCommitMessage } from '../utils/createCommitMessage.js'
 import { logMessage } from '../utils/logMessage.js'
 import { pullOption } from '../options/pullOption.js'
+import { shellExit } from '../utils/shellExit.js'
 
 export function commit(program) {
   program
@@ -58,14 +59,14 @@ export function commit(program) {
 
       if (noChanges) {
         shell.echo(logMessage.info + 'There are no changes to commit')
-        shell.exit(1)
+        shellExit(shell)
       }
 
       if (changesAreNotStaged) {
         shell.echo(
           logMessage.info + 'Please stage some changes in order to create a new commit',
         )
-        shell.exit(1)
+        shellExit(shell)
       }
 
       shell.echo(logMessage.success + 'The commit is created')
