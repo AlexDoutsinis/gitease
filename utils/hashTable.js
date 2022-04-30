@@ -1,4 +1,4 @@
-function hashTable() {
+export function hashTable() {
   const values = {}
 
   return {
@@ -17,5 +17,3 @@ function hashTable() {
     },
   }
 }
-
-module.exports = { hashTable }

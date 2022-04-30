@@ -1,99 +1,73 @@
-const shell = require('shelljs')
-const { requireGit } = require('../utils/requireGit')
-const { prepareCommand } = require('../utils/prepareCommand')
-const { requireOption } = require('../utils/requireOption')
-const { message } = require('../utils/message')
-const { stash } = require('../utils/stash')
-const { stashPop } = require('../utils/stashPop')
-const { getCurrentBranch } = require('../utils/getCurrentBranch')
-const { pull } = require('../utils/pull')
+import shell from 'shelljs'
+import { requireGit } from '../utils/requireGit.js'
+import { getCurrentLocalBranch } from '../utils/getCurrentLocalBranch.js'
+import { localBranchIsBehind } from '../utils/localBranchIsBehind.js'
+import { stashCurrentChanges } from '../utils/stashCurrentChanges.js'
+import { pullRemoteChanges } from '../utils/pullRemoteChanges.js'
+import { popStashedChanges } from '../utils/popStashedChanges.js'
+import { stageFiles } from '../utils/stageFiles.js'
+import { createCommitMessage } from '../utils/createCommitMessage.js'
+import { logMessage } from '../utils/logMessage.js'
+import { pullOption } from '../options/pullOption.js'
 
-const command = {
-  name: 'commit',
-  description:
-    'Create a commit after staging current changes and updating from remote branch. Pulling before creating a new commit can tremendously reduce future conflicts.',
-  opts: [
-    { definition: '-a, --add <files...>', description: 'add/stage files' },
-    { definition: '-m, --message <message>', description: 'commit message' },
-  ],
-  action: async ({ add: files, message: msg }) => {
-    requireGit(shell)
-    requireOption(shell, { definition: this.opts[0].definition, value: files })
-    requireOption(shell, { definition: this.opts[1].definition, value: msg })
-
-    const currentBranch = getCurrentBranch(shell)
-    const { changesAreStashed } = stash(shell)
-
-    await pull(shell, currentBranch)
-
-    if (changesAreStashed) {
-      await stashPop(shell)
-    }
-
-    shell.echo(message.info + 'Staging changes..')
-    files.forEach(file => {
-      shell.exec(`git add ${file}`)
+export function commit(program) {
+  program
+    .command({
+      name: 'commit',
+      description:
+        'Create a commit after staging current changes and updating from remote branch. Pulling before creating a new commit can tremendously reduce future conflicts.',
     })
+    .options([
+      {
+        name: { full: 'add', short: 'a' },
+        description: 'add/stage files',
+        acceptMultipleValues: true,
+        isRequired: true,
+        argumentIsRequired: true,
+      },
+      {
+        name: { full: 'message', short: 'm' },
+        description: 'commit message',
+        acceptMultipleValues: false,
+        isRequired: true,
+        argumentIsRequired: true,
+      },
+      pullOption,
+    ])
+    .action(async options => {
+      requireGit(shell)
+      const { add: files, message, pull } = options
+      const currentBranch = getCurrentLocalBranch(shell)
+      const branchIsBehind = localBranchIsBehind(shell)
+      const pullOptionIsUsed = pull != undefined
 
-    const res = shell.exec(`git commit -m "${msg}"`, { silent: true })
-    const noChanges = res.toLowerCase().includes('nothing to commit')
-    const changesAreNotStaged = res.toLowerCase().includes('not staged')
+      if (pullOptionIsUsed) {
+        if (branchIsBehind) {
+          stashCurrentChanges(shell)
+        }
 
-    if (noChanges) {
-      shell.echo(message.info + 'There are no changes to commit')
-      shell.exit(1)
-    }
+        await pullRemoteChanges(shell, currentBranch)
 
-    if (changesAreNotStaged) {
-      shell.echo(
-        message.info + 'Please stage some changes in order to create a new commit',
-      )
-      shell.exit(1)
-    }
+        if (branchIsBehind) {
+          await popStashedChanges(shell)
+        }
+      }
 
-    shell.echo(message.success + 'The commit is created')
-  },
-  // async action({ add: files, message: msg }) {
-  //   requireGit(shell)
-  //   requireOption(shell, { definition: '-a, --add <files...>', value: files })
-  //   requireOption(shell, { definition: '-m, --message <message>', value: msg })
+      stageFiles(shell, files)
+      const { noChanges, changesAreNotStaged } = createCommitMessage(shell, message)
 
-  //   const currentBranch = getCurrentBranch(shell)
-  //   const { changesAreStashed } = stash(shell)
+      if (noChanges) {
+        shell.echo(logMessage.info + 'There are no changes to commit')
+        shell.exit(1)
+      }
 
-  //   await pull(shell, currentBranch)
+      if (changesAreNotStaged) {
+        shell.echo(
+          logMessage.info + 'Please stage some changes in order to create a new commit',
+        )
+        shell.exit(1)
+      }
 
-  //   if (changesAreStashed) {
-  //     await stashPop(shell)
-  //   }
-
-  //   shell.echo(message.info + 'Staging changes..')
-  //   files.forEach(file => {
-  //     shell.exec(`git add ${file}`)
-  //   })
-
-  //   const res = shell.exec(`git commit -m "${msg}"`, { silent: true })
-  //   const noChanges = res.toLowerCase().includes('nothing to commit')
-  //   const changesAreNotStaged = res.toLowerCase().includes('not staged')
-
-  //   if (noChanges) {
-  //     shell.echo(message.info + 'There are no changes to commit')
-  //     shell.exit(1)
-  //   }
-
-  //   if (changesAreNotStaged) {
-  //     shell.echo(
-  //       message.info + 'Please stage some changes in order to create a new commit',
-  //     )
-  //     shell.exit(1)
-  //   }
-
-  //   shell.echo(message.success + 'The commit is created')
-  // },
+      shell.echo(logMessage.success + 'The commit is created')
+    })
 }
-
-function commit(program) {
-  prepareCommand(program, command)
-}
-
-module.exports = { commit }

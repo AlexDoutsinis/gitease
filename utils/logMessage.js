@@ -1,9 +1,7 @@
-const colors = require('colors')
+import colors from 'colors'
 
-const message = {
+export const logMessage = {
   success: 'Success: '.green,
   error: 'Error: '.red,
   info: 'Info: '.yellow,
 }
-
-module.exports = { message }
