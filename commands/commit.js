@@ -1,15 +1,12 @@
 import shell from 'shelljs'
 import { requireGit } from '../utils/requireGit.js'
 import { getCurrentLocalBranch } from '../utils/getCurrentLocalBranch.js'
-import { localBranchIsBehind } from '../utils/localBranchIsBehind.js'
-import { stashCurrentChanges } from '../utils/stashCurrentChanges.js'
-import { pullRemoteChanges } from '../utils/pullRemoteChanges.js'
-import { popStashedChanges } from '../utils/popStashedChanges.js'
 import { stageFiles } from '../utils/stageFiles.js'
 import { createCommitMessage } from '../utils/createCommitMessage.js'
 import { logMessage } from '../utils/logMessage.js'
 import { pullOption } from '../options/pullOption.js'
 import { shellExit } from '../utils/shellExit.js'
+import { stashAndPullRemoteChangesIfNeeded } from '../utils/stashAndPullRemoteChangesIfNeeded.js'
 
 export function commit(program) {
   program
@@ -39,19 +36,10 @@ export function commit(program) {
       requireGit(shell)
       const { add: files, message, pull } = options
       const currentBranch = getCurrentLocalBranch(shell)
-      const branchIsBehind = localBranchIsBehind(shell)
       const pullOptionIsUsed = pull != undefined
 
       if (pullOptionIsUsed) {
-        if (branchIsBehind) {
-          stashCurrentChanges(shell)
-        }
-
-        await pullRemoteChanges(shell, currentBranch)
-
-        if (branchIsBehind) {
-          await popStashedChanges(shell)
-        }
+        await stashAndPullRemoteChangesIfNeeded(shell, currentBranch)
       }
 
       stageFiles(shell, files)
