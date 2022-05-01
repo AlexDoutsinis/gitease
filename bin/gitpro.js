@@ -2,6 +2,7 @@
 import program from 'izicli'
 import { commit } from '../commands/commit.js'
 import { conflicts } from '../commands/conflicts.js'
+import { gitUser } from '../commands/gitUser.js'
 import { refresh } from '../commands/refresh.js'
 
 program.version('1.0.0')
@@ -10,5 +11,6 @@ program.version('1.0.0')
 commit(program)
 conflicts(program)
 refresh(program)
+gitUser(program)
 
 program.parse(process.argv)
