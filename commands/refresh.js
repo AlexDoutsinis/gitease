@@ -28,6 +28,11 @@ export function refresh(program) {
       const currentBranch = getCurrentLocalBranch(shell)
 
       if (currentBranch == branch) {
+        if (!branchExistOnRemote(shell, branch)) {
+          shell.echo(logMessage.error + `'${branch}' does not exist on remote`)
+          return
+        }
+
         await stashAndPullRemoteChangesIfNeeded(shell, branch)
       } else {
         if (!localBranchExist(shell, branch)) {
