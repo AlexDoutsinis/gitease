@@ -6,7 +6,8 @@ import { createCommitMessage } from '../utils/createCommitMessage.js'
 import { logMessage } from '../utils/logMessage.js'
 import { pullOption } from '../options/pullOption.js'
 import { shellExit } from '../utils/shellExit.js'
-import { stashAndPullRemoteChangesIfNeeded } from '../utils/stashAndPullRemoteChangesIfNeeded.js'
+import { stashDoThenPop } from '../utils/stashDoThenPop.js'
+import { pullRemoteChangesIfNeeded } from '../utils/pullRemoteChangesIfNeeded.js'
 
 export function commit(program) {
   program
@@ -39,7 +40,9 @@ export function commit(program) {
       const pullOptionIsUsed = pull != undefined
 
       if (pullOptionIsUsed) {
-        await stashAndPullRemoteChangesIfNeeded(shell, currentBranch)
+        await stashDoThenPop(shell, async () => {
+          await pullRemoteChangesIfNeeded(shell, currentBranch)
+        })
       }
 
       stageFiles(shell, files)

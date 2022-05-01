@@ -1,5 +1,5 @@
 export function allChangesAreStagedOrStashed(shell) {
-  const res = shell.exec('git status')
+  const status = shell.exec('git status', { silent: true })
 
-  return res.includes('not staged for commit')
+  return status.includes('working tree clean')
 }

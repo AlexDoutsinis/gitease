@@ -3,13 +3,10 @@ import { requireGit } from '../utils/requireGit.js'
 import { getCurrentLocalBranch } from '../utils/getCurrentLocalBranch.js'
 import { checkoutBranch } from '../utils/checkoutBranch.js'
 import { rebaseBranch } from '../utils/rebaseBranch.js'
-import { stashAndPullRemoteChangesIfNeeded } from '../utils/stashAndPullRemoteChangesIfNeeded.js'
-import { stashCurrentChanges } from '../utils/stashCurrentChanges.js'
-import { branchExistOnRemote } from '../utils/branchExistOnRemote.js'
-import { pullRemoteChanges } from '../utils/pullRemoteChanges.js'
-import { popStashedChanges } from '../utils/popStashedChanges.js'
+import { pullRemoteChangesIfNeeded } from '../utils/pullRemoteChangesIfNeeded.js'
 import { localBranchExist } from '../utils/localBranchExist.js'
 import { logMessage } from '../utils/logMessage.js'
+import { stashDoThenPop } from '../utils/stashDoThenPop.js'
 
 export function refresh(program) {
   program
@@ -28,28 +25,21 @@ export function refresh(program) {
       const currentBranch = getCurrentLocalBranch(shell)
 
       if (currentBranch == branch) {
-        if (!branchExistOnRemote(shell, branch)) {
-          shell.echo(logMessage.error + `'${branch}' does not exist on remote`)
-          return
-        }
-
-        await stashAndPullRemoteChangesIfNeeded(shell, branch)
+        await stashDoThenPop(shell, async () => {
+          await pullRemoteChangesIfNeeded(shell, branch)
+        })
       } else {
         if (!localBranchExist(shell, branch)) {
           shell.echo(logMessage.error + `'${branch}' does not exist locally`)
           return
         }
 
-        stashCurrentChanges(shell)
-        checkoutBranch(shell, branch)
-
-        if (branchExistOnRemote(shell, branch)) {
-          pullRemoteChanges(shell, branch)
-        }
-
-        checkoutBranch(shell, currentBranch)
-        await rebaseBranch(shell, branch)
-        await popStashedChanges(shell)
+        await stashDoThenPop(shell, async () => {
+          checkoutBranch(shell, branch)
+          await pullRemoteChangesIfNeeded(shell, branch)
+          checkoutBranch(shell, currentBranch)
+          await rebaseBranch(shell, branch)
+        })
       }
     })
 }
