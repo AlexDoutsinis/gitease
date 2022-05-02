@@ -22,14 +22,14 @@ export function commit(program) {
         description: 'add/stage files',
         acceptMultipleValues: true,
         isRequired: true,
-        argumentIsRequired: true,
+        valueIsRequired: true,
       },
       {
         name: { full: 'message', short: 'm' },
         description: 'commit message',
         acceptMultipleValues: false,
         isRequired: true,
-        argumentIsRequired: true,
+        valueIsRequired: true,
       },
       pullOption,
     ])

@@ -10,13 +10,13 @@ export function gitUser(program) {
         name: { full: 'username', short: 'username' },
         acceptMultipleValues: false,
         isRequired: false,
-        argumentIsRequired: true,
+        valueIsRequired: true,
       },
       {
         name: { full: 'email', short: 'email' },
         acceptMultipleValues: false,
         isRequired: false,
-        argumentIsRequired: true,
+        valueIsRequired: true,
       },
     ])
     .action(options => {

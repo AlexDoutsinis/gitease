@@ -3,5 +3,5 @@ export const pullOption = {
   description: 'pull remote changes before creating the commit',
   acceptMultipleValues: false,
   isRequired: false,
-  argumentIsRequired: false,
+  valueIsRequired: false,
 }
