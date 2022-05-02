@@ -4,6 +4,7 @@ import { commit } from '../commands/commit.js'
 import { conflicts } from '../commands/conflicts.js'
 import { discard } from '../commands/discard.js'
 import { gitUser } from '../commands/gitUser.js'
+import { push } from '../commands/push.js'
 import { refresh } from '../commands/refresh.js'
 import { switchBranch } from '../commands/switchBranch.js'
 
@@ -16,5 +17,6 @@ refresh(program)
 gitUser(program)
 discard(program)
 switchBranch(program)
+push(program)
 
 program.parse(process.argv)
