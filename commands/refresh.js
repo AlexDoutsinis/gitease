@@ -26,7 +26,7 @@ export function refresh(program) {
 
       if (currentBranch == branch) {
         await stashDoThenPop(shell, async () => {
-          await pullRemoteChangesIfNeeded(shell, branch)
+          await pullRemoteChangesIfNeeded(shell, currentBranch)
         })
       } else {
         if (!localBranchExist(shell, branch)) {
@@ -35,6 +35,7 @@ export function refresh(program) {
         }
 
         await stashDoThenPop(shell, async () => {
+          await pullRemoteChangesIfNeeded(shell, currentBranch)
           checkoutBranch(shell, branch)
           await pullRemoteChangesIfNeeded(shell, branch)
           checkoutBranch(shell, currentBranch)
