@@ -36,7 +36,7 @@ export async function resolveMergeConflicts(shell) {
 
     shell.echo(
       logMessage.info +
-        `There are some conflicts but they can not be found in the current directory and sub-directories. Please search for conflicts from the root directory by using the 'conflicts' command.`,
+        `There are some conflicts but they can not be found in the current directory and sub-directories. Please run the command again from the root directory`,
     )
     shellExit(shell)
   }

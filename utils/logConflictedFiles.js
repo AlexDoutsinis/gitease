@@ -2,7 +2,7 @@ import { hashTable } from './hashTable.js'
 import { logMessage } from './logMessage.js'
 import colors from 'colors'
 import inquirer from 'inquirer'
-import { nextLine } from './nextLine.js'
+import { isNumber } from './isNumber.js'
 
 export async function logConflictedFiles(shell, files) {
   if (!files || files.length < 1) return
@@ -22,12 +22,10 @@ export async function logConflictedFiles(shell, files) {
       {
         type: 'input',
         name: 'value',
-        message: 'Pick a number to open with Visual Studio Code',
+        message: 'Pick a number to open a file with Visual Studio Code\n',
         validate: isNumber,
       },
     ])
-
-    nextLine(shell)
 
     const file = filesHt.search(input.value)
     if (file == null) return await dialog()
@@ -35,7 +33,7 @@ export async function logConflictedFiles(shell, files) {
     shell.exec(`code ${file}`)
   }
 
-  for (let index = 0; index < Object.keys(files.values).length; index++) {
+  for (let index = 0; index < Object.keys(filesHt.values).length; index++) {
     await dialog()
   }
 }

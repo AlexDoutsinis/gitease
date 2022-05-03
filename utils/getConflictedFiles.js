@@ -1,7 +1,7 @@
 export function getConflictedFiles(shell, pattern = '.') {
   const files = shell.find(pattern).filter(file => {
     try {
-      const grepRes = shell.grep('--', '<<<<<<< HEAD', file).replace(/\n/g, '')
+      const grepRes = shell.grep('--', '<<<<<<<', file).replace(/\n/g, '')
 
       if (grepRes != '') {
         return file

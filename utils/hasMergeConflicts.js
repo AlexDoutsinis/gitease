@@ -1,7 +1,7 @@
 export function hasMergeConflicts(shell) {
   const files = shell.find('.').filter(file => {
     try {
-      const grepRes = shell.grep('--', '<<<<<<< HEAD', file).replace(/\n/g, '')
+      const grepRes = shell.grep('--', '<<<<<<<', file).replace(/\n/g, '')
 
       if (grepRes != '') {
         return file

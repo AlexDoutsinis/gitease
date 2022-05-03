@@ -10,7 +10,7 @@ export function conflicts(program) {
   program
     .command({ name: 'conflicts', description: 'Search for all conflicting files' })
     .argument({ name: 'pattern', description: 'Search pattern', isRequired: true })
-    .action(pattern => {
+    .action(async pattern => {
       requireGit(shell)
       requireVsCode(shell)
 
@@ -22,6 +22,6 @@ export function conflicts(program) {
         shellExit(shell)
       }
 
-      logConflictedFiles(shell, files)
+      await logConflictedFiles(shell, files)
     })
 }

@@ -40,26 +40,33 @@ export function commit(program) {
       const pullOptionIsUsed = pull != undefined
 
       if (pullOptionIsUsed) {
-        await stashDoThenPop(shell, async () => {
-          await pullRemoteChangesIfNeeded(shell, currentBranch)
-        })
+        await stashDoThenPop(shell, decidePull)
+        stageAndCommit()
+      } else {
+        stageAndCommit()
       }
 
-      stageFiles(shell, files)
-      const { noChanges, changesAreNotStaged } = createCommitMessage(shell, message)
-
-      if (noChanges) {
-        shell.echo(logMessage.info + 'There are no changes to commit')
-        shellExit(shell)
+      async function decidePull() {
+        await pullRemoteChangesIfNeeded(shell, currentBranch)
       }
 
-      if (changesAreNotStaged) {
-        shell.echo(
-          logMessage.info + 'Please stage some changes in order to create a new commit',
-        )
-        shellExit(shell)
-      }
+      function stageAndCommit() {
+        stageFiles(shell, files)
+        const { noChanges, changesAreNotStaged } = createCommitMessage(shell, message)
 
-      shell.echo(logMessage.success + 'The commit is created')
+        if (noChanges) {
+          shell.echo(logMessage.info + 'There are no staged files to commit')
+          shellExit(shell)
+        }
+
+        if (changesAreNotStaged) {
+          shell.echo(
+            logMessage.info + 'Please stage some changes in order to create a new commit',
+          )
+          shellExit(shell)
+        }
+
+        shell.echo(logMessage.success + 'The commit is created')
+      }
     })
 }
