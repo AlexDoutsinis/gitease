@@ -1,7 +1,7 @@
 import shell from 'shelljs'
 import { requireGit } from '../utils/requireGit.js'
 import { requireVsCode } from '../utils/requireVsCode.js'
-import { getConflictedFiles } from '../utils/getConflictedFiles.js'
+import { getConflictedFilesByPattern } from '../utils/getConflictedFilesByPattern.js'
 import { logConflictedFiles } from '../utils/logConflictedFiles.js'
 import { logMessage } from '../utils/logMessage.js'
 import { shellExit } from '../utils/shellExit.js'
@@ -14,7 +14,7 @@ export function conflicts(program) {
       requireGit(shell)
       requireVsCode(shell)
 
-      const files = getConflictedFiles(shell, pattern)
+      const files = getConflictedFilesByPattern(shell, pattern)
       const hasConflicts = files.length > 0
 
       if (!hasConflicts) {

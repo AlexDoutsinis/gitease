@@ -1,27 +1,26 @@
 import { logConflictedFiles } from './logConflictedFiles.js'
-import { hasMergeConflicts } from './hasMergeConflicts.js'
 import { sleep } from './sleep.js'
 import { getConflictedFiles } from './getConflictedFiles.js'
-import { logMessage } from './logMessage.js'
-import { shellExit } from './shellExit.js'
 
 export async function resolveMergeConflicts(shell) {
   let files = null
+  let conflictedFiles = null
   let count = 0
   let targetCount = 0
 
   const resolveConflicts = async (notifyConflicts = true) => {
     if (notifyConflicts) {
-      targetCount = targetCount + 20
-      await logConflictedFiles(shell, files)
+      targetCount = targetCount + 15
+      await logConflictedFiles(shell, conflictedFiles)
     }
 
-    const conflictsFound = hasMergeConflicts(shell)
+    const conflictsFound = getConflictedFiles(shell).length > 0
     if (conflictsFound) {
       count++
       await sleep(1000)
 
       if (count == targetCount) {
+        conflictedFiles = getConflictedFiles(shell)
         return await resolveConflicts()
       }
 
@@ -30,17 +29,11 @@ export async function resolveMergeConflicts(shell) {
 
     if (count > 0) {
       files.forEach(file => shell.exec(`git add ${file}`, { silent: true }))
-      shell.exec('git rebase --continue', { silent: true })
-      return
+      shell.exec('git rebase --continue')
     }
-
-    shell.echo(
-      logMessage.info +
-        `There are some conflicts but they can not be found in the current directory and sub-directories. Please run the command again from the root directory`,
-    )
-    shellExit(shell)
   }
 
-  files = getConflictedFiles(shell)
+  conflictedFiles = getConflictedFiles(shell)
+  files = conflictedFiles
   await resolveConflicts()
 }

@@ -2,7 +2,6 @@ import { hashTable } from './hashTable.js'
 import { logMessage } from './logMessage.js'
 import colors from 'colors'
 import inquirer from 'inquirer'
-import { isNumber } from './isNumber.js'
 
 export async function logConflictedFiles(shell, files) {
   if (!files || files.length < 1) return
@@ -17,12 +16,21 @@ export async function logConflictedFiles(shell, files) {
     shell.echo(`${num} ${file}`)
   })
 
+  function isNumber(str) {
+    if (str === '') return 'This value is required'
+    const isNumber = !isNaN(str) && !isNaN(parseFloat(str))
+    if (!isNumber) return 'Please enter a valid number'
+
+    return true
+  }
+
   async function dialog() {
     const input = await inquirer.prompt([
       {
         type: 'input',
         name: 'value',
-        message: 'Pick a number to open a file with Visual Studio Code\n',
+        message:
+          'Pick a number to open the file with Visual Studio Code or to continue with the next step (if all conflicts are resolved)\n',
         validate: isNumber,
       },
     ])

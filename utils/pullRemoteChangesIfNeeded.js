@@ -16,7 +16,7 @@ export async function pullRemoteChangesIfNeeded(shell, branch) {
   }
 
   shell.echo(logMessage.info + `Pulling from '${branch}'`)
-  const res = shell.exec(`git pull --rebase origin ${branch}`, { silent: true })
+  const res = shell.exec(`git pull --rebase origin ${branch}`)
 
   if (hasConflicts(res)) {
     await resolveMergeConflicts(shell)
