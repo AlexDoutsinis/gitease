@@ -8,6 +8,7 @@ import { lastCommitAdd } from '../commands/lastCommitAdd.js'
 import { lastCommitRename } from '../commands/lastCommitRename.js'
 import { push } from '../commands/push.js'
 import { refresh } from '../commands/refresh.js'
+import { showGitUser } from '../commands/showGitUser.js'
 import { switchBranch } from '../commands/switchBranch.js'
 
 program.version('1.0.0')
@@ -22,5 +23,6 @@ switchBranch(program)
 push(program)
 lastCommitAdd(program)
 lastCommitRename(program)
+showGitUser(program)
 
 program.parse(process.argv)

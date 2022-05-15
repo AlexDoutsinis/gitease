@@ -4,7 +4,7 @@ import { logMessage } from '../utils/logMessage.js'
 
 export function gitUser(program) {
   program
-    .command({ name: 'gituser', description: 'Change username and email' })
+    .command({ name: 'git-user', description: 'Change username and email' })
     .options([
       {
         name: { full: 'username', short: 'username' },
