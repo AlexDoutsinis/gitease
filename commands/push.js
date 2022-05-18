@@ -62,7 +62,7 @@ export function push(program) {
           if (isBehind) {
             shell.echo(
               logMessage.error +
-                "The remote contains works that you do not have locally. Please use the command option '-p' to pull the changes before pushing to remote",
+                "The remote contains work that you do not have locally. Please use the command option '-p' to pull the changes before pushing to remote",
             )
 
             shellExit(shell)
