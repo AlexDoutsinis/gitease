@@ -4,10 +4,21 @@
   "description": "",
   "bin": "./bin/gitease.js",
   "type": "module",
+  "keywords": [
+    "git",
+    "bash",
+    "unix",
+    "shell",
+    "cli"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Alex Doutsinis <Alxdoutsinis@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alexiosdut/gitease.git"
+  },
   "license": "MIT",
   "dependencies": {
     "colors": "^1.4.0",
