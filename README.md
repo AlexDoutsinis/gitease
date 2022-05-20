@@ -1,7 +1,7 @@
-## gitpro
+## gitease
 
 A CLI tool that simplifies GIT usage.
-Self documented, just hit `gitpro -h`.
+Self documented, just hit `gitease -h`.
 
 ## Todos
 

@@ -1,8 +1,8 @@
 {
-  "name": "gitpro",
+  "name": "gitease",
   "version": "1.0.0",
   "description": "",
-  "bin": "./bin/gitpro.js",
+  "bin": "./bin/gitease.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
