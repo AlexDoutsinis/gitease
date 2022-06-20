@@ -16,13 +16,13 @@ export function discard(program) {
     })
     .action(files => {
       requireGit(shell)
-
+      const msg = files.length > 1 ? 'Files discarded' : 'File discarded'
       const discardFile = file => {
         shell.exec(`git reset HEAD ${file}`, { silent: true })
         shell.exec(`git checkout -- ${file}`, { silent: true })
-        shell.echo(logMessage.success + `'${file}' discarded`)
       }
 
       files.forEach(file => discardFile(file))
+      shell.echo(logMessage.success + msg)
     })
 }
