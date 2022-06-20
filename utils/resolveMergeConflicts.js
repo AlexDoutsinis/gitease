@@ -29,7 +29,7 @@ export async function resolveMergeConflicts(shell) {
 
     if (count > 0) {
       files.forEach(file => shell.exec(`git add ${file}`, { silent: true }))
-      shell.exec('git rebase --continue')
+      shell.exec('GIT_EDITOR=true git rebase --continue')
     }
   }
 
