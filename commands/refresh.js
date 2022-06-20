@@ -12,19 +12,18 @@ export function refresh(program) {
   program
     .command({
       name: 'refresh',
-      description:
-        'Refreshes the current branch from x branch. If x branch is same with current branch, it just pulls from x. If it is not, then it merges x branch into current branch',
+      description: 'Refreshes the current branch from a remote branch',
     })
     .argument({
       name: 'remoteBranch',
       description: 'The remote branch to pull from',
-      isRequired: true,
+      isRequired: false,
     })
     .action(async branch => {
       requireGit(shell)
       const currentBranch = getCurrentLocalBranch(shell)
 
-      if (currentBranch == branch) {
+      if (currentBranch == branch || !branch) {
         await stashDoThenPop(shell, async () => {
           await pullRemoteChangesIfNeeded(shell, currentBranch)
         })
