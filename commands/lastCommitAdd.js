@@ -11,8 +11,9 @@ export function lastCommitAdd(program) {
     .argument({ name: 'files', isRequired: true, acceptMultipleValues: true })
     .action(files => {
       requireGit(shell)
+      const msg = files.length > 1 ? 'Adding files' : 'Adding file'
 
-      shell.echo(logMessage.info + 'Adding files')
+      shell.echo(logMessage.info + msg)
       files.forEach(file => shell.exec(`git add ${file}`, { silent: true }))
       shell.exec('git commit --amend --no-edit')
     })

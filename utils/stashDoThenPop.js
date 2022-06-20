@@ -14,6 +14,4 @@ export async function stashDoThenPop(shell, callback) {
   if (stashChanges) {
     await popStashedChanges(shell)
   }
-
-  //await afterPopCallback()
 }
