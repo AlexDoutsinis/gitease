@@ -8,7 +8,6 @@ import { localBranchIsBehind } from '../utils/localBranchIsBehind.js'
 import { logMessage } from '../utils/logMessage.js'
 import { pullRemoteChangesIfNeeded } from '../utils/pullRemoteChangesIfNeeded.js'
 import { requireGit } from '../utils/requireGit.js'
-import { shellExit } from '../utils/shellExit.js'
 import { stashDoThenPop } from '../utils/stashDoThenPop.js'
 
 export function push(program) {
@@ -50,10 +49,10 @@ export function push(program) {
         if (branchIsDiverged(shell)) {
           shell.echo(
             logMessage.error +
-              `'${currentLocalBranch}' branch is diverged. Please use 'git pull' and run the command again`,
+              `'${currentLocalBranch}' branch is diverged. Please use the command option '-p' and run the command again`,
           )
 
-          shellExit(shell)
+          return
         }
 
         if (localBranchHasCommits(shell)) {
@@ -65,7 +64,7 @@ export function push(program) {
                 "The remote contains work that you do not have locally. Please use the command option '-p' to pull the changes before pushing to remote",
             )
 
-            shellExit(shell)
+            return
           }
 
           shell.exec(`git push origin -u ${currentLocalBranch}`, {
