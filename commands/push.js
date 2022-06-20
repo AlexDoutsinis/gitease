@@ -67,7 +67,6 @@ export function push(program) {
             return
           }
 
-          shell.echo(logMessage.info + `Pushing changes to '${currentLocalBranch}'`)
           shell.exec(`git push origin -u ${currentLocalBranch}`, {
             silent: true,
           })
