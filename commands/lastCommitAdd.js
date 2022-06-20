@@ -1,6 +1,6 @@
 import shell from 'shelljs'
 import { requireGit } from '../utils/requireGit.js'
-import { logMessage } from '../utils/logMessage.js'
+import { stageFiles } from '../utils/stageFiles.js'
 
 export function lastCommitAdd(program) {
   program
@@ -11,10 +11,8 @@ export function lastCommitAdd(program) {
     .argument({ name: 'files', isRequired: true, acceptMultipleValues: true })
     .action(files => {
       requireGit(shell)
-      const msg = files.length > 1 ? 'Adding files' : 'Adding file'
+      stageFiles(shell, files)
 
-      shell.echo(logMessage.info + msg)
-      files.forEach(file => shell.exec(`git add ${file}`, { silent: true }))
       shell.exec('git commit --amend --no-edit')
     })
 }
