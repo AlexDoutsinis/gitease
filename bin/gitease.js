@@ -11,7 +11,7 @@ import { refresh } from '../commands/refresh.js'
 import { showGitUser } from '../commands/showGitUser.js'
 import { switchBranch } from '../commands/switchBranch.js'
 
-program.version('1.0.1')
+program.version('1.0.4')
 
 // commands
 commit(program)
