@@ -7,7 +7,7 @@ export async function logConflictedFiles(shell, files) {
   if (!files || files.length < 1) return
   const filesHt = hashTable()
 
-  shell.echo(logMessage.info + 'Resolve merge conflicts:')
+  shell.echo(logMessage.info + 'Please resolve the conflicts:')
 
   files.forEach((file, index) => {
     const num = `${index + 1}.`.blue.bold
@@ -30,7 +30,7 @@ export async function logConflictedFiles(shell, files) {
         type: 'input',
         name: 'value',
         message:
-          'Pick a number to open the file with Visual Studio Code or to continue with the next step (if all conflicts are resolved)\n',
+          'Pick a number to open the file with Visual Studio Code or if you have resolved he conflicts, to continue with the next step\n',
         validate: isNumber,
       },
     ])

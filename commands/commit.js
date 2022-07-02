@@ -55,13 +55,14 @@ export function commit(program) {
         const { noChanges, changesAreNotStaged } = createCommitMessage(shell, message)
 
         if (noChanges) {
-          shell.echo(logMessage.info + 'There are no staged files to commit')
+          shell.echo(logMessage.warning + 'There are no staged files to commit')
           shellExit(shell)
         }
 
         if (changesAreNotStaged) {
           shell.echo(
-            logMessage.info + 'Please stage some changes in order to create a new commit',
+            logMessage.warning +
+              'Please stage some changes in order to create a new commit',
           )
           shellExit(shell)
         }

@@ -11,7 +11,7 @@ export async function pullRemoteChangesIfNeeded(shell, branch) {
   }
 
   if (!localBranchIsBehind(shell)) {
-    shell.echo(logMessage.info + `There are not changes to pull from '${branch}'`)
+    shell.echo(logMessage.warning + `There are not changes to pull from '${branch}'`)
     return
   }
 
