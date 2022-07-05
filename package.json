@@ -1,6 +1,6 @@
 {
   "name": "gitease",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "bin": "./bin/gitease.js",
   "type": "module",
