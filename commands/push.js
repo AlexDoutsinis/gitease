@@ -73,7 +73,7 @@ export function push(program) {
 
           shell.echo(
             logMessage.success +
-              `Commits are pushed to remote '${currentLocalBranch}' branch`,
+              `Commits are pushed to remote branch '${currentLocalBranch}'`,
           )
         } else {
           shell.echo(logMessage.warning + 'There are no commits to push')
