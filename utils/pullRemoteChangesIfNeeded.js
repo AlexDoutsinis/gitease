@@ -6,7 +6,7 @@ import { branchExistOnRemote } from './branchExistOnRemote.js'
 
 export async function pullRemoteChangesIfNeeded(shell, branch) {
   if (!branchExistOnRemote(shell, branch)) {
-    shell.echo(logMessage.error + `'${branch}' does not exist on remote`)
+    shell.echo(logMessage.warning + `'${branch}' does not exist on remote`)
     return
   }
 
