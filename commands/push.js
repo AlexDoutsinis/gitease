@@ -21,6 +21,7 @@ export function push(program) {
       requireGit(shell)
       const currentLocalBranch = getCurrentLocalBranch(shell)
       const pullOptionIsUsed = pull != undefined
+      let branchDoesNotExistOnRemote = false
 
       await stashDoThenPop(shell, async () => {
         if (branchExistOnRemote(shell, currentLocalBranch)) {
@@ -44,12 +45,25 @@ export function push(program) {
             logMessage.info +
               `'${currentLocalBranch}' branch does not exist on remote. Pushing new branch to remote`,
           )
+
+          branchDoesNotExistOnRemote = true
         }
 
         if (branchIsDiverged(shell)) {
           shell.echo(
             logMessage.error +
               `'${currentLocalBranch}' branch is diverged. Please use the command option '-p' and run the command again`,
+          )
+
+          return
+        }
+
+        if (branchDoesNotExistOnRemote) {
+          shell.exec(`git push --set-upstream origin ${currentLocalBranch}`)
+
+          shell.echo(
+            logMessage.success +
+              `The newly created '${currentLocalBranch}' branch is pushed to remote`,
           )
 
           return
