@@ -3,7 +3,7 @@ import { logMessage } from './logMessage.js'
 import { resolveMergeConflicts } from './resolveMergeConflicts.js'
 
 export async function rebaseBranch(shell, branch) {
-  shell.echo(logMessage.info + `Rebasing '${branch}'`)
+  shell.echo(logMessage.info + `Rebasing '${branch}' branch`)
   const res = shell.exec(`git rebase ${branch}`)
 
   if (hasConflicts(res)) {

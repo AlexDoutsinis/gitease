@@ -34,10 +34,22 @@ export function refresh(program) {
         }
 
         await stashDoThenPop(shell, async () => {
-          await pullRemoteChangesIfNeeded(shell, currentBranch)
+          const currentBranchHasChanges = await pullRemoteChangesIfNeeded(
+            shell,
+            currentBranch,
+          )
           checkoutBranch(shell, branch)
-          await pullRemoteChangesIfNeeded(shell, branch)
+          const branchHasChanges = await pullRemoteChangesIfNeeded(shell, branch)
           checkoutBranch(shell, currentBranch)
+
+          if (!currentBranchHasChanges && !branchHasChanges) {
+            shell.echo(
+              logMessage.warning +
+                `There are no changes to pull from ${currentBranch}' and '${branch}' branches`,
+            )
+            return
+          }
+
           await rebaseBranch(shell, branch)
         })
       }

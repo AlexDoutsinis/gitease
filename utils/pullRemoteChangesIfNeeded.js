@@ -6,19 +6,23 @@ import { branchExistOnRemote } from './branchExistOnRemote.js'
 
 export async function pullRemoteChangesIfNeeded(shell, branch) {
   if (!branchExistOnRemote(shell, branch)) {
-    shell.echo(logMessage.warning + `'${branch}' does not exist on remote`)
-    return
+    shell.echo(logMessage.warning + `'${branch}' branch does not exist on remote`)
+    return false
   }
 
   if (!localBranchIsBehind(shell)) {
-    shell.echo(logMessage.warning + `There are not changes to pull from '${branch}'`)
-    return
+    shell.echo(
+      logMessage.warning + `There are not changes to pull from '${branch}' branch`,
+    )
+    return false
   }
 
-  shell.echo(logMessage.info + `Pulling from '${branch}'`)
+  shell.echo(logMessage.info + `Pulling from '${branch}' branch`)
   const res = shell.exec(`git pull --rebase origin ${branch}`)
 
   if (hasConflicts(res)) {
     await resolveMergeConflicts(shell)
   }
+
+  return true
 }
