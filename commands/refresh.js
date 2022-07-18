@@ -45,7 +45,7 @@ export function refresh(program) {
           if (!currentBranchHasChanges && !branchHasChanges) {
             shell.echo(
               logMessage.warning +
-                `There are no changes to pull from ${currentBranch}' and '${branch}' branches so the process ends here`,
+                `There are no changes to pull from '${currentBranch}' and '${branch}' branches so the process ends here`,
             )
             return
           }
