@@ -2,7 +2,7 @@ import { logConflictedFiles } from './logConflictedFiles.js'
 import { sleep } from './sleep.js'
 import { getConflictedFiles } from './getConflictedFiles.js'
 
-export async function resolveMergeConflicts(shell) {
+export async function resolveConflicts(shell, merge = true) {
   let files = null
   let conflictedFiles = null
   let count = 0
@@ -28,8 +28,17 @@ export async function resolveMergeConflicts(shell) {
     }
 
     if (count > 0) {
-      files.forEach(file => shell.exec(`git add ${file}`, { silent: true }))
-      shell.exec('git -c core.editor=true rebase --continue')
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        shell.exec(`git add ${file}`, { silent: true })
+      }
+
+      if (merge) {
+        shell.exec(`git commit -m "resolve merge conflicts"`)
+      }
+      else {
+        shell.exec('git -c core.editor=true rebase --continue')
+      }
     }
   }
 

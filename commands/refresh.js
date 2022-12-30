@@ -8,6 +8,7 @@ import { localBranchExist } from "../utils/localBranchExist.js"
 import { logMessage } from "../utils/logMessage.js"
 import { stashDoThenPop } from "../utils/stashDoThenPop.js"
 import { branchExistOnRemote } from "../utils/branchExistOnRemote.js"
+import { mergeBranch } from "../utils/mergeBranch.js"
 
 export function refresh(program) {
   program
@@ -30,22 +31,15 @@ export function refresh(program) {
         })
       } else {
         if (!localBranchExist(shell, remoteBranch)) {
-          shell.echo(logMessage.error + `'${remoteBranch}' does not exist locally`)
+          shell.echo(logMessage.error + `'${remoteBranch}' branch does not exist locally`)
           return
         }
 
         if (!branchExistOnRemote(shell, remoteBranch)) {
-          shell.echo(logMessage.error + `'${remoteBranch}' does not exist on remote`)
+          shell.echo(logMessage.error + `'${remoteBranch}' branch does not exist on remote`)
           return
         }
 
-        if (branchExistOnRemote(shell, currentBranch)) {
-          shell.echo(
-            logMessage.error +
-              `You are currently on '${currentBranch}' branch which exists on remote. Please make sure that you are on a local branch in order to continue with the command`,
-          )
-          return
-        }
 
         await stashDoThenPop(shell, async () => {
           checkoutBranch(shell, remoteBranch)
@@ -55,12 +49,17 @@ export function refresh(program) {
           if (!remoteBranchHasChanges) {
             shell.echo(
               logMessage.warning +
-                `There are no changes to pull from '${remoteBranch}' branch. '${currentBranch}' is fresh!`,
+                `There are no changes to pull from '${remoteBranch}' branch. '${currentBranch}' branch is fresh!`,
             )
             return
           }
 
-          await rebaseBranch(shell, remoteBranch)
+          if (branchExistOnRemote(shell, currentBranch)) {
+            await mergeBranch(shell, remoteBranch)
+          }
+          else {
+            await rebaseBranch(shell, remoteBranch)
+          }
         })
       }
     })

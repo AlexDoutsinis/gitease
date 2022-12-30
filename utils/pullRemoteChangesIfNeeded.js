@@ -1,5 +1,5 @@
 import { logMessage } from './logMessage.js'
-import { resolveMergeConflicts } from './resolveMergeConflicts.js'
+import { resolveConflicts } from './resolveConflicts.js'
 import { hasConflicts } from './hasConflicts.js'
 import { localBranchIsBehind } from './localBranchIsBehind.js'
 import { branchExistOnRemote } from './branchExistOnRemote.js'
@@ -21,7 +21,7 @@ export async function pullRemoteChangesIfNeeded(shell, branch) {
   const res = shell.exec(`git pull --rebase origin ${branch}`)
 
   if (hasConflicts(res)) {
-    await resolveMergeConflicts(shell)
+    await resolveConflicts(shell)
   }
 
   return true

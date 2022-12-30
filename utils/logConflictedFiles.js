@@ -30,7 +30,7 @@ export async function logConflictedFiles(shell, files) {
         type: 'input',
         name: 'value',
         message:
-          'Pick a number to open the file with Visual Studio Code or to continue with the next step if you have resolved the conflicts \n',
+          "Pick a file to open with VS Code and resolve the conflicts or, if you already did so, to continue with the next step \n",
         validate: isNumber,
       },
     ])
