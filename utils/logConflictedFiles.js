@@ -9,12 +9,13 @@ export async function logConflictedFiles(shell, files) {
 
   shell.echo(logMessage.info + 'Please resolve the conflicts:')
 
-  files.forEach((file, index) => {
+  for (let index = 0; index < files.length; index++) {
+    const file = files[index];
     const num = `${index + 1}.`.blue.bold
     filesHt.add(index + 1, file)
 
     shell.echo(`${num} ${file}`)
-  })
+  }
 
   function isNumber(str) {
     if (str === '') return 'This value is required'
