@@ -69,14 +69,8 @@ export function push(program) {
             return
           }
 
-          shell.exec(`git push origin -u ${currentLocalBranch}`, {
-            silent: true,
-          })
-
-          shell.echo(
-            logMessage.success +
-              `Commits are pushed to remote branch '${currentLocalBranch}'`,
-          )
+          shell.echo(logMessage.info + `Pushing the changes to '${currentLocalBranch}' branch`)
+          shell.exec(`git push ${currentLocalBranch}`)
         } else {
           shell.echo(logMessage.warning + 'There are no commits to push')
         }
