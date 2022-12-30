@@ -6,6 +6,7 @@ import { discard } from '../commands/discard.js'
 import { gitUser } from '../commands/gitUser.js'
 import { lastCommitAdd } from '../commands/lastCommitAdd.js'
 import { lastCommitRename } from '../commands/lastCommitRename.js'
+import { push } from '../commands/push.js'
 import { refresh } from '../commands/refresh.js'
 import { showGitUser } from '../commands/showGitUser.js'
 
@@ -18,7 +19,7 @@ refresh(program)
 gitUser(program)
 discard(program)
 // switchBranch(program)
-// push(program)
+push(program)
 lastCommitAdd(program)
 lastCommitRename(program)
 showGitUser(program)
