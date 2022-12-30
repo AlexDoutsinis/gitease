@@ -6,10 +6,8 @@ import { discard } from '../commands/discard.js'
 import { gitUser } from '../commands/gitUser.js'
 import { lastCommitAdd } from '../commands/lastCommitAdd.js'
 import { lastCommitRename } from '../commands/lastCommitRename.js'
-import { push } from '../commands/push.js'
 import { refresh } from '../commands/refresh.js'
 import { showGitUser } from '../commands/showGitUser.js'
-import { switchBranch } from '../commands/switchBranch.js'
 
 program.version('1.0.8')
 

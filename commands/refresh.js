@@ -48,7 +48,7 @@ export function refresh(program) {
           if (!remoteBranchHasChanges) {
             shell.echo(
               logMessage.warning +
-                `There are no changes to pull from '${remoteBranch}' branch. '${currentBranch}' branch is fresh!`,
+                `There are no changes to pull from '${remoteBranch}' branch`,
             )
             return
           }
