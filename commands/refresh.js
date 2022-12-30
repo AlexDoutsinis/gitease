@@ -40,7 +40,6 @@ export function refresh(program) {
           return
         }
 
-
         await stashDoThenPop(shell, async () => {
           checkoutBranch(shell, remoteBranch)
           const remoteBranchHasChanges = await pullRemoteChangesIfNeeded(shell, remoteBranch)
