@@ -35,7 +35,7 @@ export function commit(program) {
     ])
     .action(async options => {
       requireGit(shell)
-      const { add: files, message, pull } = options
+      const { add: givenFiles, message, pull } = options
       const currentBranch = getCurrentLocalBranch(shell)
       const pullOptionIsUsed = pull != undefined
 
@@ -51,6 +51,8 @@ export function commit(program) {
       }
 
       function stageAndCommit() {
+        const files = givenFiles.includes(",") ? givenFiles.split(",") : givenFiles;
+
         stageFiles(shell, files)
         const { noChanges, changesAreNotStaged } = createCommitMessage(shell, message)
 
