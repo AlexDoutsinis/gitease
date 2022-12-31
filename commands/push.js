@@ -70,7 +70,7 @@ export function push(program) {
           }
 
           shell.echo(logMessage.info + `Pushing the changes to '${currentLocalBranch}' branch`)
-          shell.exec(`git push ${currentLocalBranch}`)
+          shell.exec(`git push`)
         } else {
           shell.echo(logMessage.warning + 'There are no commits to push')
         }
