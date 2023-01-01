@@ -69,7 +69,14 @@ export function push(program) {
             return
           }
 
-          shell.exec(`git push`)
+          shell.exec(`git push`, {silent: true})
+          const statusRes = shell.exec("git status", {silent: true})
+          if (statusRes.includes("ahead")) {
+            shell.echo(logMessage.error + `The changes could not be pushed to remote '${currentLocalBranch}' branch`)
+          }
+          else {
+            shell.echo(logMessage.success + `The changes are pushed to remote '${currentLocalBranch}' branch`)
+          }
         } else {
           shell.echo(logMessage.warning + 'There are no commits to push')
         }
