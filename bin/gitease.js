@@ -10,7 +10,7 @@ import { push } from '../commands/push.js'
 import { refresh } from '../commands/refresh.js'
 import { showGitUser } from '../commands/showGitUser.js'
 
-program.version('2.0.1')
+program.version('2.0.2')
 
 // commands
 commit(program)
