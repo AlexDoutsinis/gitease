@@ -1,20 +1,16 @@
 import shell from 'shelljs'
 import { requireGit } from '../utils/requireGit.js'
-import { getCurrentLocalBranch } from '../utils/getCurrentLocalBranch.js'
 import { stageFiles } from '../utils/stageFiles.js'
 import { createCommitMessage } from '../utils/createCommitMessage.js'
 import { logMessage } from '../utils/logMessage.js'
-import { pullOption } from '../options/pullOption.js'
 import { shellExit } from '../utils/shellExit.js'
-import { stashDoThenPop } from '../utils/stashDoThenPop.js'
-import { pullRemoteChangesIfNeeded } from '../utils/pullRemoteChangesIfNeeded.js'
 
 export function commit(program) {
   program
     .command({
       name: 'commit',
       description:
-        'Create a commit after staging current changes and updating from remote branch. Pulling before creating a new commit can tremendously reduce future conflicts.',
+        'Create a commit after staging current changes. Files can be either space or comma(,) separated.',
     })
     .options([
       {
@@ -30,46 +26,22 @@ export function commit(program) {
         acceptMultipleValues: false,
         isRequired: true,
         valueIsRequired: true,
-      },
-      pullOption,
+      }
     ])
     .action(async options => {
       requireGit(shell)
-      const { add: givenFiles, message, pull } = options
-      const currentBranch = getCurrentLocalBranch(shell)
-      const pullOptionIsUsed = pull != undefined
+      const { add: givenFiles, message } = options
 
-      if (pullOptionIsUsed) {
-        await stashDoThenPop(shell, decidePull)
-        stageAndCommit()
-      } else {
-        stageAndCommit()
+      const files = givenFiles.includes(",") ? givenFiles.split(",") : givenFiles;
+
+      stageFiles(shell, files)
+      const { noChanges } = createCommitMessage(shell, message)
+
+      if (noChanges) {
+        shell.echo(logMessage.warning + 'There is nothing to commit')
+        shellExit(shell)
       }
 
-      async function decidePull() {
-        await pullRemoteChangesIfNeeded(shell, currentBranch)
-      }
-
-      function stageAndCommit() {
-        const files = givenFiles.includes(",") ? givenFiles.split(",") : givenFiles;
-
-        stageFiles(shell, files)
-        const { noChanges, changesAreNotStaged } = createCommitMessage(shell, message)
-
-        if (noChanges) {
-          shell.echo(logMessage.warning + 'There is nothing to commit')
-          shellExit(shell)
-        }
-
-        if (changesAreNotStaged) {
-          shell.echo(
-            logMessage.warning +
-              'There are no staged files',
-          )
-          shellExit(shell)
-        }
-
-        shell.echo(logMessage.success + 'The commit is created')
-      }
+      shell.echo(logMessage.success + 'The commit is created')
     })
 }
