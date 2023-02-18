@@ -1,12 +1,10 @@
 import shell from 'shelljs'
-import { pullOption } from '../options/pullOption.js'
 import { branchExistOnRemote } from '../utils/branchExistOnRemote.js'
 import { branchIsDiverged } from '../utils/branchIsDiverged.js'
 import { getCurrentLocalBranch } from '../utils/getCurrentLocalBranch.js'
 import { localBranchHasCommits } from '../utils/localBranchHasCommits.js'
 import { localBranchIsBehind } from '../utils/localBranchIsBehind.js'
 import { logMessage } from '../utils/logMessage.js'
-import { pullRemoteChangesIfNeeded } from '../utils/pullRemoteChangesIfNeeded.js'
 import { requireGit } from '../utils/requireGit.js'
 import { stashDoThenPop } from '../utils/stashDoThenPop.js'
 
@@ -14,35 +12,20 @@ export function push(program) {
   program
     .command({
       name: 'push',
-      description: 'Push local branch commits to remote branch after updating from it',
+      description: 'Push commits to remote. Takes care of stashing changes',
     })
-    .options([pullOption])
-    .action(async ({ pull }) => {
+    .action(async () => {
       requireGit(shell)
       const currentLocalBranch = getCurrentLocalBranch(shell)
-      const pullOptionIsUsed = pull != undefined
 
       await stashDoThenPop(shell, async () => {
         if (branchExistOnRemote(shell, currentLocalBranch)) {
-          let msg
-          if (pullOptionIsUsed) {
-            msg =
-              logMessage.info +
-              `'${currentLocalBranch}' branch exist on remote. Check if pull needed before pushing the changes`
-          } else {
-            msg =
-              logMessage.info +
-              `'${currentLocalBranch}' branch exist on remote. Pushing the changes`
-          }
+          const msg = logMessage.info + `'${currentLocalBranch}' branch exist on remote. Pushing the changes`
           shell.echo(msg)
-
-          if (pullOptionIsUsed) {
-            await pullRemoteChangesIfNeeded(shell, currentLocalBranch)
-          }
         } else {
           shell.echo(
             logMessage.warning +
-              `'${currentLocalBranch}' branch does not exist on remote. This command is only used to push commits to remote branches`,
+              `'${currentLocalBranch}' branch does not exist on remote. This command is only used to push commits to existing remote branches`,
           )
 
           return
@@ -51,7 +34,7 @@ export function push(program) {
         if (branchIsDiverged(shell)) {
           shell.echo(
             logMessage.error +
-              `'${currentLocalBranch}' branch is diverged. Please use the command option '-p' and run the command again`,
+              `'${currentLocalBranch}' branch is diverged. Please pull from remote and run the command again`,
           )
 
           return
@@ -63,20 +46,14 @@ export function push(program) {
           if (isBehind) {
             shell.echo(
               logMessage.error +
-                "The remote contains work that you do not have locally. Please use the command option '-p' to pull the changes before pushing to remote",
+                "The remote contains work that you do not have locally. Please pull the changes before pushing to remote",
             )
 
             return
           }
 
           shell.exec(`git push`, {silent: true})
-          const statusRes = shell.exec("git status", {silent: true})
-          if (statusRes.includes("ahead")) {
-            shell.echo(logMessage.error + `The changes could not be pushed to remote '${currentLocalBranch}' branch`)
-          }
-          else {
-            shell.echo(logMessage.success + `The changes are pushed to remote '${currentLocalBranch}' branch`)
-          }
+          shell.echo(logMessage.success + `The changes are pushed to remote '${currentLocalBranch}' branch`)
         } else {
           shell.echo(logMessage.warning + 'There are no commits to push')
         }
