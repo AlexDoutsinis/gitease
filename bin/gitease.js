@@ -2,12 +2,10 @@
 import program from 'izicli'
 import { commit } from '../commands/commit.js'
 import { discard } from '../commands/discard.js'
-import { gitUser } from '../commands/gitUser.js'
 import { lastCommitAdd } from '../commands/lastCommitAdd.js'
 import { lastCommitRename } from '../commands/lastCommitRename.js'
 import { push } from '../commands/push.js'
 import { refresh } from '../commands/refresh.js'
-import { showGitUser } from '../commands/showGitUser.js'
 
 program.version('2.1.0')
 
@@ -15,12 +13,12 @@ program.version('2.1.0')
 commit(program)
 // conflicts(program)
 refresh(program)
-gitUser(program)
+// gitUser(program)
 discard(program)
 // switchBranch(program)
 push(program)
 lastCommitAdd(program)
 lastCommitRename(program)
-showGitUser(program)
+// showGitUser(program)
 
 program.parse(process.argv)
