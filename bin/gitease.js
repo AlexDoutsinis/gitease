@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import program from 'izicli'
 import { commit } from '../commands/commit.js'
-import { conflicts } from '../commands/conflicts.js'
 import { discard } from '../commands/discard.js'
 import { gitUser } from '../commands/gitUser.js'
 import { lastCommitAdd } from '../commands/lastCommitAdd.js'
@@ -14,7 +13,7 @@ program.version('2.0.2')
 
 // commands
 commit(program)
-conflicts(program)
+// conflicts(program)
 refresh(program)
 gitUser(program)
 discard(program)
