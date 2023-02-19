@@ -1,48 +1,51 @@
-import { logConflictedFiles } from './logConflictedFiles.js'
-import { sleep } from './sleep.js'
-import { getConflictedFiles } from './getConflictedFiles.js'
+import colors from 'colors'
+import inquirer from 'inquirer'
+import { logMessage } from './logMessage.js'
+import { stageFiles } from './stageFiles.js'
+
+function fileHasConflicts(shell, file) {
+  const has = !!shell.grep('--', '<<<<<<<', file).replace(/\n/g, '')
+  if (has) return true
+
+  return false
+}
 
 export async function resolveConflicts(shell, merge = true) {
-  let files = null
-  let conflictedFiles = null
-  let count = 0
-  let targetCount = 0
+  const res = shell.exec('git diff --name-only --diff-filter=U', { silent: true });
+  const files = res.stdout.trim().split('\n');
+  const conflictedFiles = files.filter(file => fileHasConflicts(shell, file))
 
-  const resolveConflicts = async (notifyConflicts = true) => {
-    if (notifyConflicts) {
-      targetCount = targetCount + 15
-      await logConflictedFiles(shell, conflictedFiles)
+  if (conflictedFiles?.length > 0) {
+    shell.echo(logMessage.info + 'Please resolve the conflicts in files shown bellow and then continue with the next step')
+
+    for (let index = 0; index < conflictedFiles.length; index++) {
+      const file = conflictedFiles[index];
+      const num = `${index + 1}.`.blue.bold
+
+      shell.echo(`${num} ${file}`)
     }
 
-    const conflictsFound = getConflictedFiles(shell).length > 0
-    if (conflictsFound) {
-      count++
-      await sleep(1000)
+    const response = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'value',
+        message:
+          "Press any key to continue",
+      },
+    ])
 
-      if (count == targetCount) {
-        conflictedFiles = getConflictedFiles(shell)
-        return await resolveConflicts()
-      }
-
-      return await resolveConflicts(false)
-    }
-
-    if (count > 0) {
-      for (let index = 0; index < files.length; index++) {
-        const file = files[index];
-        shell.exec(`git add ${file}`, { silent: true })
-      }
-
-      if (merge) {
-        shell.exec(`git commit -m "resolve merge conflicts"`)
-      }
-      else {
-        shell.exec('git -c core.editor=true rebase --continue')
-      }
+    if (response) {
+      resolveConflicts(shell, merge)
     }
   }
+  else {
+    stageFiles(shell, files)
 
-  conflictedFiles = getConflictedFiles(shell)
-  files = conflictedFiles
-  await resolveConflicts()
+    if (merge) {
+      shell.exec(`git commit -m "resolve merge conflicts"`)
+    }
+    else {
+      shell.exec('git -c core.editor=true rebase --continue')
+    }
+  }
 }
